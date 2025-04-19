@@ -1,0 +1,54 @@
+# Python cache and logs
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.out
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Spark checkpoints and state
+mnt/*
+spark-checkpoints/
+checkpoint/
+state/
+spark-warehouse/
+.metastore_db/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode and editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment & package management
+.env
+.env.*
+.venv/
+venv/
+Pipfile.lock
+poetry.lock
+
+# Docker
+*.pid
+*.sock
+docker-compose.override.yml
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Maven
+target/
+*.iml
+
+# Kafka topic data (if accidentally persisted)
+kafka-data/
