@@ -1,60 +1,63 @@
 # System Architecture
 
 ```mermaid
+---
+config:
+  layout: elk
+  theme: base
+---
 flowchart LR
-    subgraph Producers
-        java[Java Producer]
-        python[Python Producer]
-    end
-
-    subgraph Kafka["Kafka Cluster"]
-        subgraph Controllers
-            C1[Controller 1]
-            C2[Controller 2]
-            C3[Controller 3]
-        end
-        subgraph Brokers
-            B1[Broker 1]
-            B2[Broker 2]
-            B3[Broker 3]
-        end
-        Schema[Schema Registry]
-        Control[Control Center]
-    end
-
-    subgraph StreamProcessing["Apache Spark Stream Processors"]
-        S1[Spark Job 1]
-        S2[Spark Job 2]
-        S3[Spark Job 3]
-    end
-
-    subgraph ElasticStack["Elasticsearch + Visualization"]
-        ES[Elasticsearch]
-        Logstash
-        Kibana
-    end
-
-    subgraph Monitoring
-        Prometheus
-        Grafana
-    end
-
-    java -->|Streaming| C1
-    python -->|Streaming| C2
+ subgraph Producers["Producers"]
+        java["Java Producer"]
+        python["Python Producer"]
+  end
+ subgraph Controllers["Controllers"]
+        C1["Controller 1"]
+        C2["Controller 2"]
+        C3["Controller 3"]
+  end
+ subgraph Brokers["Brokers"]
+        B1["Broker 1"]
+        B2["Broker 2"]
+        B3["Broker 3"]
+  end
+ subgraph Kafka["Kafka Cluster"]
+        Controllers
+        Brokers
+        Schema["Schema Registry"]
+        Control["Control Center"]
+  end
+ subgraph StreamProcessing["Apache Spark Cluster"]
+        Master["Spark Master"]
+        S1["Spark Job 1"]
+        S2["Spark Job 2"]
+        S3["Spark Job 3"]
+  end
+ subgraph ElasticStack["Elasticsearch + Visualization"]
+        ES["Elasticsearch"]
+        Logstash["Logstash"]
+        Kibana["Kibana"]
+  end
+ subgraph Monitoring["Monitoring (Global)"]
+        Prometheus["Prometheus"]
+        Grafana["Grafana"]
+  end
+    java -- Streaming --> Kafka
+    python -- Streaming --> Kafka
     C1 --> B1
     C2 --> B2
     C3 --> B3
     Schema --> Kafka
     Control --> Kafka
-    B1 -->|Stream Data| S1
-    B2 -->|Stream Data| S2
-    B3 -->|Stream Data| S3
-    S1 -->|Streamed Results| ES
-    S2 -->|Streamed Results| ES
-    S3 -->|Streamed Results| ES
-    ES --> Logstash --> Kibana
-    Prometheus --> Monitoring
-    Grafana --> Monitoring
+    Kafka -- Stream Data --> S1 & S2 & S3
+    Master --> S1 & S2 & S3
+    S1 -- Streamed Results --> ES
+    S2 -- Streamed Results --> ES
+    S3 -- Streamed Results --> ES
+    ES --> Logstash
+    Logstash --> Kibana
+    Monitoring --> Kafka & StreamProcessing & ElasticStack
+
 ```
 
 # Real-Time Data Streaming Architecture (Kafka + Spark + Elasticsearch + Kibana)
