@@ -15,7 +15,7 @@ spark = (SparkSession.builder
          .config('spark.jars.packages', 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3')
          .config('spark.sql.streaming.checkpointLocation', CHECKPOINT_DIR)
          .config('spark.sql.streaming.stateStore.stateStoreProviderClass', 'org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider')
-         .config('spark.sql.shuffle.partitions', '20')  # typo fix: 'suffle' -> 'shuffle'
+         .config('spark.sql.shuffle.partitions', '20') 
          ).getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
@@ -76,6 +76,9 @@ aggregation_query = aggregated_df \
     .start().awaitTermination()
 
 # create topics before you run the below command 
+
+#delete checkpoints, else will throw an error while running again
+# rm -rf mnt/checkpoint/aggregates
 
 # Run in terminal
 # docker exec -it spark-master spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3 jobs/spark_processor.py
