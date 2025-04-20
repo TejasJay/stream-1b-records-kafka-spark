@@ -4,7 +4,6 @@
 ---
 config:
   layout: elk
-  theme: base
 ---
 flowchart LR
  subgraph Producers["Producers"]
@@ -57,6 +56,7 @@ flowchart LR
     ES --> Logstash
     Logstash --> Kibana
     Monitoring --> Kafka & StreamProcessing & ElasticStack
+
 
 ```
 
