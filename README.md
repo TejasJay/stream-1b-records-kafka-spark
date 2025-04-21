@@ -59,6 +59,9 @@ flowchart LR
 
 
 ```
+---
+
+## Detailed Architecture
 
 ```mermaid
 flowchart TD
@@ -109,6 +112,7 @@ flowchart TD
 
 
 ```
+---
 
 # Real-Time Data Streaming Architecture (Kafka + Spark + Elasticsearch + Kibana)
 
