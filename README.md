@@ -60,6 +60,83 @@ flowchart LR
 
 ```
 
+```mermaid
+---
+config:
+  layout: elk
+  look: classic
+---
+flowchart TD
+ subgraph Kafka_Cluster["Kafka_Cluster"]
+        controller1["kafka-controller-1"]
+        controller2["kafka-controller-2"]
+        controller3["kafka-controller-3"]
+        broker1["kafka-broker-1"]
+        broker2["kafka-broker-2"]
+        broker3["kafka-broker-3"]
+  end
+ subgraph Spark_Cluster["Spark_Cluster"]
+        spark_master["spark-master"]
+        spark_worker_1["spark-worker-1"]
+        spark_worker_2["spark-worker-2"]
+        spark_worker_3["spark-worker-3"]
+  end
+ subgraph Monitoring["Monitoring"]
+        prometheus["Prometheus"]
+        alertmanager["Alertmanager"]
+        grafana["Grafana"]
+  end
+ subgraph Logging["Logging"]
+        filebeat["Filebeat"]
+        logstash["Logstash"]
+        elasticsearch["Elasticsearch"]
+        kibana["Kibana"]
+  end
+    controller1 <---> controller2
+    controller2 <---> controller3
+    controller3 <---> controller1
+    broker1 --> controller1
+    broker2 --> controller2
+    broker3 --> controller3
+    broker1 <--> spark_master
+    broker2 <--> spark_master
+    broker3 <--> spark_master
+    spark_master --> spark_worker_1 & spark_worker_2 & spark_worker_3
+    prometheus --> broker1 & broker2 & broker3 & spark_master & spark_worker_1 & spark_worker_2 & spark_worker_3 & alertmanager
+    grafana --> prometheus
+    filebeat --> elasticsearch
+    filebeat -- reads logs --> broker1 & broker2 & broker3 & controller1 & controller2 & controller3
+    logstash --> elasticsearch
+    logstash -- reads logs --> broker1 & broker2 & broker3 & controller1 & controller2 & controller3
+    kibana --> elasticsearch
+    schema_registry["Schema Registry"] --> broker1 & broker2 & broker3
+    console["Redpanda Console"] --> schema_registry & broker1 & broker2 & broker3
+    style controller1 fill:#FFE0B2
+    style controller2 fill:#FFE0B2
+    style controller3 fill:#FFE0B2
+    style broker1 fill:#E1BEE7
+    style broker2 fill:#E1BEE7
+    style broker3 fill:#E1BEE7
+    style spark_master fill:#FF6D00
+    style spark_worker_1 fill:#00C853
+    style spark_worker_2 fill:#00C853
+    style spark_worker_3 fill:#00C853
+    style prometheus fill:#BBDEFB
+    style alertmanager fill:#BBDEFB
+    style grafana fill:#BBDEFB
+    style filebeat fill:#FFD600
+    style logstash fill:#FFD600
+    style elasticsearch fill:#FFD600
+    style kibana fill:#FFD600
+    style schema_registry fill:#C8E6C9
+    style console fill:#FFCDD2
+    style Logging fill:#AA00FF
+    style Spark_Cluster stroke:#FFD600
+    style Kafka_Cluster fill:#FF6D00
+    style Monitoring fill:#2962FF
+
+```
+
 # Real-Time Data Streaming Architecture (Kafka + Spark + Elasticsearch + Kibana)
 
 This architecture demonstrates a **real-time streaming pipeline** using the following components:
