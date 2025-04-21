@@ -63,55 +63,7 @@ flowchart LR
 
 ## Detailed Architecture
 
-```mermaid
-flowchart TD
- subgraph Kafka_Cluster["Kafka_Cluster"]
-        controller1["kafka-controller-1"]
-        controller2["kafka-controller-2"]
-        controller3["kafka-controller-3"]
-        broker1["kafka-broker-1"]
-        broker2["kafka-broker-2"]
-        broker3["kafka-broker-3"]
-  end
- subgraph Spark_Cluster["Spark_Cluster"]
-        spark_master["spark-master"]
-        spark_worker_1["spark-worker-1"]
-        spark_worker_2["spark-worker-2"]
-        spark_worker_3["spark-worker-3"]
-  end
- subgraph Monitoring["Monitoring"]
-        prometheus["Prometheus"]
-        alertmanager["Alertmanager"]
-        grafana["Grafana"]
-  end
- subgraph Logging["Logging"]
-        filebeat["Filebeat"]
-        logstash["Logstash"]
-        elasticsearch["Elasticsearch"]
-        kibana["Kibana"]
-  end
-    controller1 <---> controller2
-    controller2 <---> controller3
-    controller3 <---> controller1
-    broker1 --> controller1
-    broker2 --> controller2
-    broker3 --> controller3
-    broker1 <--> spark_master
-    broker2 <--> spark_master
-    broker3 <--> spark_master
-    spark_master --> spark_worker_1 & spark_worker_2 & spark_worker_3
-    prometheus --> broker1 & broker2 & broker3 & spark_master & spark_worker_1 & spark_worker_2 & spark_worker_3 & alertmanager
-    grafana --> prometheus
-    filebeat --> elasticsearch
-    filebeat -- reads logs --> broker1 & broker2 & broker3 & controller1 & controller2 & controller3
-    logstash --> elasticsearch
-    logstash -- reads logs --> broker1 & broker2 & broker3 & controller1 & controller2 & controller3
-    kibana --> elasticsearch
-    schema_registry["Schema Registry"] --> broker1 & broker2 & broker3
-    console["Redpanda Console"] --> schema_registry & broker1 & broker2 & broker3
-
-
-```
+<img src="architecture.png">
 ---
 
 # Real-Time Data Streaming Architecture (Kafka + Spark + Elasticsearch + Kibana)
