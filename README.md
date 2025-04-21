@@ -61,14 +61,6 @@ flowchart LR
 ```
 
 ```mermaid
----
-config:
-  layout: elk
-  look: classic
----
----
-
----
 flowchart TD
  subgraph Kafka_Cluster["Kafka_Cluster"]
         controller1["kafka-controller-1"]
