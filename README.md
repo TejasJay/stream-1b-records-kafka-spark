@@ -64,6 +64,7 @@ flowchart LR
 ## Detailed Architecture
 
 <img src="architecture.png">
+
 ---
 
 # Real-Time Data Streaming Architecture (Kafka + Spark + Elasticsearch + Kibana)
