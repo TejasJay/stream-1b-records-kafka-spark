@@ -1,5 +1,41 @@
 version: '3.8'
 
+
+x-kafka-controller-base: &kafka-controller-base
+  image: apache/kafka:3.8.1
+  restart: on-failure
+  command:
+    - /bin/sh
+    - -c
+    - |
+      echo '
+      log4j.rootLogger=INFO, stdout, kafkaAppender
+      log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+      log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+      log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n
+      log4j.appender.kafkaAppender=org.apache.log4j.RollingFileAppender
+      log4j.appender.kafkaAppender.File=/opt/kafka/logs/kafka.log
+      log4j.appender.kafkaAppender.MaxFileSize=10MB
+      log4j.appender.kafkaAppender.MaxBackupIndex=10
+      log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout
+      log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n
+      ' > /tmp/log4j.properties
+      /etc/kafka/docker/run
+  volumes:
+    - ./volumes/jmx_exporter:/usr/share/jmx_exporter
+  networks:
+    - billion
+
+x-spark-common: &spark-common
+  image: bitnami/spark:3.5.0
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+    - ./mnt/checkpoint:/mnt/spark-checkpoints
+    - ./mnt/spark-state:/mnt/spark-state
+  networks:
+    - billion
+
+
 services:
   kafka-controller-1:
     image: apache/kafka:3.8.1
@@ -68,6 +104,7 @@ services:
       - broker_data_1:/var/lib/kafka/data
     networks:
       - billion
+
 
   kafka-broker-2:
     image: apache/kafka:3.8.1
@@ -159,14 +196,7 @@ services:
     networks:
       - billion
 
-  x-spark-common: &spark-common
-    image: bitnami/spark:3.5.0
-    volumes:
-      - ./jobs:/opt/bitnami/spark/jobs
-      - ./mnt/checkpoint:/mnt/spark-checkpoints
-      - ./mnt/spark-state:/mnt/spark-state
-    networks:
-      - billion
+
 
   spark-master:
     container_name: spark-master
