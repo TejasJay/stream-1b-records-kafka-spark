@@ -97,7 +97,7 @@ This architecture demonstrates a **real-time streaming pipeline** using the foll
   - Parsing & cleansing
   - Aggregations or joins
   - Enriching with metadata
-- Output is streamed directly to **Elasticsearch** for indexing.
+- Output is streamed directly to **Elasticsearch** for indexing
 
 ---
 
